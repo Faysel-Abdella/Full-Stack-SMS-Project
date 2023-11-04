@@ -8,6 +8,10 @@ const teacherSchema = new Schema({
     required: true,
   },
 
+  gender: {
+    type: String,
+  },
+
   ID: {
     type: String,
     required: true,
@@ -18,7 +22,10 @@ const teacherSchema = new Schema({
     required: true,
   },
 
-  role: "Teacher",
+  role: {
+    type: String,
+    default: "Teacher",
+  },
 
   teaching_subjects: {
     type: [String], // An array of strings to store multiple subjects
@@ -37,3 +44,5 @@ const teacherSchema = new Schema({
     type: String,
   },
 });
+
+module.exports = mongoose.model("Teacher", teacherSchema);

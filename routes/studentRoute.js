@@ -8,6 +8,6 @@ const {
   validateAddingStudent,
 } = require("../middlewares/validationMiddleware");
 
-router.post("/student/add-new", validateAddingStudent, addStudent);
+router.post("/v1/api/students", validateAddingStudent, addStudent);
 
 module.exports = router;

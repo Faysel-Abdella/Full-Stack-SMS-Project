@@ -13,8 +13,10 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 const studentRoute = require("./routes/studentRoute");
+const teacherRoute = require("./routes/teacherRoute");
 
 app.use(studentRoute);
+app.use(teacherRoute);
 
 app.get("/", (req, res, next) => {
   res.json({ message: "Hi, welcome" });
