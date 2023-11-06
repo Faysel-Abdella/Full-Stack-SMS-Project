@@ -13,9 +13,11 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 const studentRoute = require("./routes/studentRoute");
+const managerRoute = require("./routes/managerRoute");
 const teacherRoute = require("./routes/teacherRoute");
 
 app.use(studentRoute);
+app.use(managerRoute);
 app.use(teacherRoute);
 
 app.get("/", (req, res, next) => {

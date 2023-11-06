@@ -119,3 +119,19 @@ exports.validateAddingTeacher = withValidatorErrors([
       }
     }),
 ]);
+
+exports.validateAddingResult = withValidatorErrors([
+  body("subjectName")
+    .notEmpty()
+    .withMessage("Subject name is required")
+    .custom(async (value) => {
+      if (!allowedSubjects.includes(value)) {
+        throw new error("Invalid subject");
+      }
+    }),
+
+  body("assessmentName").notEmpty().withMessage("Assessment name is required"),
+
+  body("score").notEmpty().withMessage("Score is required"),
+  body("outOf").notEmpty().withMessage("Out of is required"),
+]);

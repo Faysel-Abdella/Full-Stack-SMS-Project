@@ -8,5 +8,5 @@ const managerSchema = new Schema({
     required: true,
   },
 
-  role: "Manager",
+  //   role: "Manager",
 });
