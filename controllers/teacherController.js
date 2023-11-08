@@ -9,9 +9,9 @@ exports.addResult = async (req, res, next) => {
     const student = await Student.findOne({ ID: studentId });
 
     if (!student) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Student not found" });
+      const error = new Error("Student Not Found when adding result");
+      error.statusCode = StatusCodes.NOT_FOUND;
+      throw error;
     }
 
     // Check if the subject exist in the student's result
@@ -70,13 +70,19 @@ exports.addResult = async (req, res, next) => {
 exports.deleteResult = async (req, res, next) => {
   const { studentId, subjectName, assessmentName } = req.body;
 
+  if (!studentId || !subjectName || !assessmentName) {
+    const error = new Error("Invalid credential");
+    error.statusCode = StatusCodes.BAD_REQUEST;
+    throw error;
+  }
+
   try {
     const student = await Student.findOne({ ID: studentId });
 
     if (!student) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Student Not Found" });
+      const error = new Error("Student Not Found when deleting result");
+      error.statusCode = StatusCodes.NOT_FOUND;
+      throw error;
     }
 
     // Find the subject
@@ -85,7 +91,9 @@ exports.deleteResult = async (req, res, next) => {
     );
 
     if (subjectIndex === -1) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: "Subject Not Found" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Subject Not Found" });
     }
 
     // Find the assessment and delete
@@ -94,7 +102,7 @@ exports.deleteResult = async (req, res, next) => {
     );
 
     if (assessmentIndex === -1) {
-      res
+      return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "Assessment Not Found " });
     }
@@ -103,9 +111,10 @@ exports.deleteResult = async (req, res, next) => {
 
     await student.save();
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Assessment deleted successfully" });
+    res.status(StatusCodes.OK).json({
+      result: student.result,
+      message: "Assessment deleted successfully",
+    });
   } catch (error) {
     console.error(error);
     res
