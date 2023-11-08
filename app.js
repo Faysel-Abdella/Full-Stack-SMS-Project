@@ -1,5 +1,5 @@
 require("express-async-errors");
-
+const { StatusCodes } = require("http-status-codes");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -15,9 +15,11 @@ app.use(express.json());
 const studentRoute = require("./routes/studentRoute");
 const managerRoute = require("./routes/managerRoute");
 const teacherRoute = require("./routes/teacherRoute");
+const registerRoute = require("./routes/registerRoute");
 
-app.use(studentRoute);
 app.use(managerRoute);
+app.use(registerRoute);
+app.use(studentRoute);
 app.use(teacherRoute);
 
 app.get("/", (req, res, next) => {

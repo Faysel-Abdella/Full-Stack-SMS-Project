@@ -56,6 +56,7 @@ exports.addResult = async (req, res, next) => {
     }
 
     await student.save();
+
     res.status(StatusCodes.CREATED).json({
       student: student,
       message: "Assessment data updated successfully",
@@ -63,5 +64,52 @@ exports.addResult = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.deleteResult = async (req, res, next) => {
+  const { studentId, subjectName, assessmentName } = req.body;
+
+  try {
+    const student = await Student.findOne({ ID: studentId });
+
+    if (!student) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Student Not Found" });
+    }
+
+    // Find the subject
+    const subjectIndex = student.result.findIndex(
+      (subject) => subject.subjectName === subjectName
+    );
+
+    if (subjectIndex === -1) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Subject Not Found" });
+    }
+
+    // Find the assessment and delete
+    const assessmentIndex = student.result[subjectIndex].results.findIndex(
+      (assessment) => assessment.name === assessmentName
+    );
+
+    if (assessmentIndex === -1) {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Assessment Not Found " });
+    }
+
+    student.result[subjectIndex].results.splice(assessmentIndex, 1);
+
+    await student.save();
+
+    res
+      .status(StatusCodes.OK)
+      .json({ message: "Assessment deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal server error" });
   }
 };
